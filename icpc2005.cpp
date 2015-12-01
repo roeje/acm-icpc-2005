@@ -3,15 +3,51 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include <map>
 #include <math.h>
 #include <algorithm>
 
 using namespace std;
 
+string returnMessage(string& pString, int groupSize);
+int returnBinary(string pString);
+void headerKey(string& pString);
+bool checkForOne (string& threeString, int groupSize);
 
-map<string, char> tempMap;
+map <string, string> tempMap;
 string output = "";
+
+void readData(istream& data) {
+
+//    headerKey(a);
+//    cout << "output tempMat at 0" << endl;
+//    cout << tempMap.at("0") << endl;
+//    int groupSize = returnBinary(b.substr(0,3));
+//    cout << groupSize << endl;
+//    b = b.substr(3);
+//    cout << b << endl;
+//    cout << returnMessage(b, groupSize) << endl;
+
+
+    string header;
+    string mainData;
+    getline(data,header);
+    cout << header << endl;
+    string c;
+    while (getline(data, c)) {
+        mainData += c;
+        cout << mainData;
+    }
+    cout << "running main segment" << endl;
+    headerKey(header);
+    cout << tempMap.at("0") << endl;
+    int groupSize = returnBinary(mainData.substr(0,3));
+    cout << groupSize << endl;
+    mainData = mainData.substr(3);
+    cout << mainData << endl;
+    cout << returnMessage(mainData, groupSize) << endl;
+}
 
 int returnBinary(string pString){
     if(pString == "000"){
@@ -28,14 +64,14 @@ int returnBinary(string pString){
     return total;
 }
 
-map <string, char> headerKey(string& pString){
-    // map<string, char> tempMap;
+void headerKey(string& pString){
     //keeps track of position in string
     int position = 0;
     //iterates through the string
-    for(std::string::iterator it = pString.begin(); it != pString.end(); it++) {
+    for(std::string::iterator it = pString.begin(); it != pString.end(); ++it) {
         if(position == 0){
             tempMap["0"] = *it;
+            cout << *it << endl;
         }
         else
         if(position == 1){
@@ -75,12 +111,11 @@ map <string, char> headerKey(string& pString){
         }
         position++;
     }
-    return tempMap;
 }
 
 bool checkForOne (string& threeString, int groupSize) {
-    int i = 0;
-    while(threeString.at(i) == '1' ) {
+    int i = 1;
+    while(i <= threeString.size() && threeString.at(i - 1) == '1' ) {
         if(i == groupSize)
             return true;
         i++;
@@ -89,38 +124,51 @@ bool checkForOne (string& threeString, int groupSize) {
 }
 
 string returnMessage(string& pString, int groupSize) {
-    string chunk = pString.substr(0, groupSize - 1);
+    string chunk = pString.substr(0, groupSize);
     if (groupSize == 0) {
         return output;
     }
     else if(checkForOne(chunk, groupSize)) {
-        int groupSize = returnBinary(pString.substr(0, 2));
-        string newString = pString.substr(2);
+        pString = pString.substr(groupSize, pString.size());
+        int groupSize = returnBinary(pString.substr(0, 3));
+        cout << "new groupSize" << endl;
+        cout << to_string(groupSize) << endl;
+        string newString = pString.substr(3);
+        cout << newString << endl;
+        cout << "new SubString" << endl;
         return returnMessage(newString, groupSize);
     }
     else {
-        char decoded = tempMap[chunk];
+        string decoded = tempMap[chunk];
         output += decoded;
-        string temp = pString.substr(groupSize - 1);
+        string temp = pString.substr(groupSize, pString.size());
         return returnMessage(temp, groupSize);
     }
 }
 
 int main() {
-    string c;
-    string header;
-    string mainData;
-    cin >> header;
-    cout << header << endl;
-    while (cin >> c){
-        mainData += c;
-        cout << mainData;
-    }
-    headerKey(header);
-    cout << to_string(tempMap.at("0")) << endl;
-    int groupSize = returnBinary(mainData.substr(0,2));
-    cout << groupSize << endl;
-    mainData = mainData.substr(2);
-    cout << mainData << endl;
-    returnMessage(mainData, groupSize);
+//    string a = "$#**/";
+//    string b = "0100000101101100011100101000";
+//
+//    headerKey(a);
+//    cout << "output tempMat at 0" << endl;
+//    cout << tempMap.at("0") << endl;
+//    int groupSize = returnBinary(b.substr(0,3));
+//    cout << groupSize << endl;
+//    b = b.substr(3);
+//    cout << b << endl;
+//    cout << returnMessage(b, groupSize) << endl;
+
+
+
+
+    istream& data = cin;
+    readData(data);
 }
+
+//$#**/
+//01
+//00000
+//1011011
+//000111
+//00101000
