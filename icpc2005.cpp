@@ -18,35 +18,22 @@ bool checkForOne (string& threeString, int groupSize);
 map <string, string> tempMap;
 string output = "";
 
-void readData(istream& data) {
-
-//    headerKey(a);
-//    cout << "output tempMat at 0" << endl;
-//    cout << tempMap.at("0") << endl;
-//    int groupSize = returnBinary(b.substr(0,3));
-//    cout << groupSize << endl;
-//    b = b.substr(3);
-//    cout << b << endl;
-//    cout << returnMessage(b, groupSize) << endl;
-
-
+string readData(istream& data) {
     string header;
     string mainData;
     getline(data,header);
-    cout << header << endl;
     string c;
-    while (getline(data, c)) {
+    while (getline(data, c) &&  c != "" && c != "") {
         mainData += c;
-        cout << mainData;
+//        if(getline(data, c) && c != ""){
+//            mainData += c;
+//            break;
+//        }
     }
-    cout << "running main segment" << endl;
     headerKey(header);
-    cout << tempMap.at("0") << endl;
     int groupSize = returnBinary(mainData.substr(0,3));
-    cout << groupSize << endl;
     mainData = mainData.substr(3);
-    cout << mainData << endl;
-    cout << returnMessage(mainData, groupSize) << endl;
+    return returnMessage(mainData, groupSize);
 }
 
 int returnBinary(string pString){
@@ -71,7 +58,6 @@ void headerKey(string& pString){
     for(std::string::iterator it = pString.begin(); it != pString.end(); ++it) {
         if(position == 0){
             tempMap["0"] = *it;
-            cout << *it << endl;
         }
         else
         if(position == 1){
@@ -131,11 +117,7 @@ string returnMessage(string& pString, int groupSize) {
     else if(checkForOne(chunk, groupSize)) {
         pString = pString.substr(groupSize, pString.size());
         int groupSize = returnBinary(pString.substr(0, 3));
-        cout << "new groupSize" << endl;
-        cout << to_string(groupSize) << endl;
         string newString = pString.substr(3);
-        cout << newString << endl;
-        cout << "new SubString" << endl;
         return returnMessage(newString, groupSize);
     }
     else {
@@ -160,10 +142,8 @@ int main() {
 //    cout << returnMessage(b, groupSize) << endl;
 
 
-
-
     istream& data = cin;
-    readData(data);
+    cout << readData(data);
 }
 
 //$#**/
